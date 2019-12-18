@@ -1,0 +1,13 @@
+from urllib.parse import urlparse
+
+DATABASE_URL = "postgres://ravnxhin:Bvni2U...@john.db.elephantsql.com:5432/ravnxhin "
+
+url = urlparse(DATABASE_URL)
+
+
+conn = pg.connect(database=url.path[1:],
+      user=url.username,
+      password=url.password,
+      host=url.hostname,
+      port=url.port
+    )

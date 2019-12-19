@@ -1,4 +1,3 @@
-
 import my_app
 import unittest
 
@@ -10,25 +9,24 @@ class MyTestCase(unittest.TestCase):
         self.app = my_app.app.test_client()
 
     def test_allTasks(self):
-        result = self.app.get('/todo/api/v1.0/tasks')
+        result = self.app.get('/getTask')
         self.assertEqual(result.status_code,200)
-        # Make your assertions
 
     def test_singleTasks(self):
-        result = self.app.get('/todo/api/v1.0/tasks/2')
+        result = self.app.get('/getSingleTask/102')
         self.assertEqual(result.status_code,200)
 
 
     def test_addTask(self):
-        result = self.app.post('/todo/api/v1.0/tasks')
+        result = self.app.post('/createTask')
         self.assertEqual(result.status_code,200)
 
     def test_updateTask(self):
-        result = self.app.get('/todo/api/v1.0/tasks/4')
+        result = self.app.put('/updateTask')
         self.assertEqual(result.status_code,200)
 
     def test_deleteTask(self):
-        result = self.app.delete('/todo/api/v1.0/tasks/5')
+        result = self.app.delete('/deleteTask/104')
         self.assertEqual(result.status_code,200)
 
     

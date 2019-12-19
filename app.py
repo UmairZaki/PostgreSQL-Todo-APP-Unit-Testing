@@ -5,10 +5,10 @@ app = Flask(__name__)
 
 ## DATABASE details ##
 
-db_name = "ravnxhin"
-db_user = "ravnxhin"
-db_pass = "Bvni2U-fQ0XLFRqlsieWB-yiFHhGwgR3"
-db_host = "john.db.elephantsql.com"
+db_name = "vhpimhhs"
+db_user = "vhpimhhs"
+db_pass = "k3CiOaI6T3Z4ijDKanhunq2doaYFJTXl"
+db_host = "rajje.db.elephantsql.com"
 db_port = "5432"
 
 ## Connnecting DATABASE ##
@@ -20,62 +20,62 @@ print("database connected")
 ### Creating tables ###
 
 # curr = connection.cursor()
-# req = """CREATE TABLE task (ID INT PRIMARY KEY NOT NULL,
+# tab = """CREATE TABLE newtable (ID INT PRIMARY KEY NOT NULL,
 #                             TITLE TEXT NOT NULL,
 #                             DESCRIPTION TEXT NOT NULL,
 #                             DONE BOOLEAN NOT NULL)"""
-# curr.execute(req)
+# curr.execute(tab)
 # connection.commit()
 # print("table created")
 
 
 
-@app.route('/todo/api/v1.0/tasks',methods=['GET'])
-def get_alltasks():
-    dic = []
+@app.route('/getTask', methods=['GET'])
+def getTask():
+    task = []
     # connection = psycopg2.connect(database = db_name, user = db_user, password = db_pass, host = db_host, port = db_port)
     curr = connection.cursor()
-    req = "SELECT * FROM task"
+    req = "SELECT * FROM newtable"
     curr.execute(req)
     data = curr.fetchall()
     connection.commit()
     connection.close()
     for i in range(len(data)):
-            dic.append({'id':data[i][0],'title':data[i][1],'description':data[i][2],'done':bool(data[i][3])})
-    return jsonify(dic)
+            task.append({'id':data[i][0],'title':data[i][1],'description':data[i][2],'done':bool(data[i][3])})
+    return jsonify(task)
 
 
 
-@app.route('/todo/api/v1.0/tasks/<id>', methods=['GET'])
-def getting_singleTask(id):
+@app.route('/getSingleTask/<id>', methods=['GET'])
+def getSingleTask(id):
     connection = psycopg2.connect(database = db_name, user = db_user, password = db_pass, host = db_host, port = db_port)
     curr = connection.cursor()
-    req = "SELECT * FROM task WHERE id = " + str(id)
+    req = "SELECT * FROM newtable WHERE id = " + str(id)
     curr.execute(req)
     data = curr.fetchall()
     connection.commit()
     connection.close()
     for i in range(len(data)):
-        dic = {'id':data[i][0],'title':data[i][1],'description':data[i][2],'done':bool(data[i][3])}
-    return jsonify(dic)    
+        task = {'id':data[i][0],'title':data[i][1],'description':data[i][2],'done':bool(data[i][3])}
+    return jsonify(task)    
 
 
 
 
-@app.route('/todo/api/v1.0/tasks',methods=['POST'])
-def addTasks():
-    data = request.get_json()
+@app.route('/createTask', methods=['POST'])
+def createTask():
+    task = request.json
     connection = psycopg2.connect(database = db_name, user = db_user, password = db_pass, host = db_host, port = db_port)
     curr = connection.cursor()
-    req = "SELECT id FROM task"
+    req = "SELECT id FROM newtable"
     curr.execute(req)
-    find_id = curr.fetchall()
-    if (data != None) and ('id' in data):
-        if (len(find_id) != 0):
-            for i in find_id:
-                if (i[0] == data['id']):
+    match = curr.fetchall()
+    if (task != None) and ('id' in task):
+        if (len(match) != 0):
+            for i in match:
+                if (i[0] == task['id']):
                     return "id already taken"
-        req1 = "INSERT INTO task(ID, TITLE, DESCRIPTION, DONE) VALUES(" + str(data['id']) + ",'" + str(data['title'])+ "','" +str(data['description']) + "'," + str(data['done']) + ")"
+        req1 = "INSERT INTO newtable(ID, TITLE, DESCRIPTION, DONE) VALUES(" + str(task['id']) + ",'" + str(task['title'])+ "','" +str(task['description']) + "'," + str(task['done']) + ")"
         curr.execute(req1)
         connection.commit()
         connection.close()
@@ -84,26 +84,26 @@ def addTasks():
 
 
 
-@app.route('/todo/api/v1.0/tasks/<id>',methods=['PUT'])
-def update_Task(id):
-    data = request.get_json()
+@app.route('/updateTask', methods=['PUT'])
+def updateTask():
+    task = request.json
     connection = psycopg2.connect(database = db_name, user = db_user, password = db_pass, host = db_host, port = db_port)
     curr = connection.cursor()
-    req = "SELECT id FROM task"
+    req = "SELECT id FROM newtable"
     curr.execute(req)
-    find_id = curr.fetchall()
-    if (len(find_id) != 0):
-        if (data != None):
-            for i in find_id:
+    match = curr.fetchall()
+    if (len(match) != 0):
+        if (task != None):
+            for i in match:
                 if (str(i[0]) == str(id)):
                     req1 = "UPDATE task SET "
-                    for i in data:
+                    for i in task:
                         if (str(i) == 'title'):
-                            req1 += "title='" + data['title'] + "',"
+                            req1 += "title='" + task['title'] + "',"
                         if (str(i) =='description'):
-                            req1 += "description='" + data['description'] + "',"
+                            req1 += "description='" + task['description'] + "',"
                         if (str(i) =='done'):
-                            req1 += "done=" + str(data['done']) + ","
+                            req1 += "done=" + str(task['done']) + ","
                     req1 = req1[:len(req1)-1]
                     req1 += " WHERE id = " + str(id)
                     curr.execute(req1)
@@ -115,16 +115,16 @@ def update_Task(id):
 
 
 
-@app.route('/todo/api/v1.0/tasks/<id>', methods=['DELETE'])
-def delete_Task(id):
+@app.route('/deleteTask/<id>', methods=['DELETE'])
+def deleteTask(id):
     connection = psycopg2.connect(database = db_name, user = db_user, password = db_pass, host = db_host, port = db_port)
     curr = connection.cursor()
     req = "SELECT id FROM task"
     curr.execute(req)
-    find_id = curr.fetchall()
-    for i in find_id:
+    match = curr.fetchall()
+    for i in match:
         if (str(i[0]) == str(id)):    
-            req = "DELETE FROM task WHERE id = " + str(id)
+            req = "DELETE FROM newtable WHERE id = " + str(id)
             curr.execute(req)
             connection.commit()
             connection.close()

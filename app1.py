@@ -119,7 +119,7 @@ def updateTask():
 def deleteTask(id):
     connection = psycopg2.connect(database = db_name, user = db_user, password = db_pass, host = db_host, port = db_port)
     curr = connection.cursor()
-    req = "SELECT id FROM task"
+    req = "SELECT id FROM newtable"
     curr.execute(req)
     match = curr.fetchall()
     for i in match:

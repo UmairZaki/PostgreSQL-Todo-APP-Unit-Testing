@@ -1,12 +1,12 @@
-import my_app
+import app1
 import unittest
 
 
 class MyTestCase(unittest.TestCase):
 
     def setUp(self):
-        my_app.app.testing = True
-        self.app = my_app.app.test_client()
+        app1.app.testing = True
+        self.app = app1.app.test_client()
 
     def test_allTasks(self):
         result = self.app.get('/getTask')
@@ -26,7 +26,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result.status_code,200)
 
     def test_deleteTask(self):
-        result = self.app.delete('/deleteTask/104')
+        result = self.app.delete('/deleteTask/101')
         self.assertEqual(result.status_code,200)
 
     
